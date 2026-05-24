@@ -1,0 +1,14 @@
+/*
+Theme Name: SWE Clone
+Theme URI: https://swe.vn/
+Description: Clone giao diện SWE (Street Wear Eazy) cho đồ án - học cấu trúc e-commerce Haravan-style trên WordPress.
+Author: DATN SWE
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+Text Domain: swe-clone
+*/
+
+/* Entry point — styles chính nằm trong assets/css/main.css */
