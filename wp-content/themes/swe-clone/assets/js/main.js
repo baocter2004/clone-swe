@@ -53,10 +53,14 @@
 	}
 
 	/* Hero slider */
-	if (heroSlider && heroDots) {
+	if (heroSlider) {
 		const slides = heroSlider.querySelectorAll('.swe-hero__slide');
+		if (slides.length < 2) return;
+
 		let current = 0;
 		let timer;
+
+		if (!heroDots) return;
 
 		slides.forEach((_, i) => {
 			const dot = document.createElement('button');
@@ -94,14 +98,10 @@
 		if (slides.length > 1) startAutoplay();
 	}
 
-	/* Demo: "Mua ngay" */
-	document.querySelectorAll('.swe-product-card__buy').forEach((btn) => {
-		btn.addEventListener('click', () => {
-			const countEl = document.querySelector('.swe-header__cart-count');
-			if (countEl) {
-				countEl.textContent = String(parseInt(countEl.textContent, 10) + 1);
-			}
+	/* Mở giỏ sau khi thêm (WooCommerce AJAX) */
+	if (typeof jQuery !== 'undefined') {
+		jQuery(document.body).on('added_to_cart', function () {
 			setCartOpen(true);
 		});
-	});
+	}
 })();

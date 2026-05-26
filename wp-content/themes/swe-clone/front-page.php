@@ -7,17 +7,18 @@
 
 get_header();
 
-$slides     = swe_clone_hero_slides();
-$categories = swe_clone_categories();
-$products   = swe_clone_products();
+$slides     = swe_clone_get_hero_slides();
+$categories = swe_clone_get_categories();
+$products   = swe_clone_get_home_products();
 $services   = swe_clone_services();
+$feedback   = swe_clone_get_feedback();
 ?>
 
-<section class="swe-hero" aria-label="<? esc_attr_e( 'Banner', 'swe-clone' ); ?>">
+<section class="swe-hero swe-hero--fullscreen" aria-label="<? esc_attr_e( 'Banner', 'swe-clone' ); ?>">
 	<div class="swe-hero__slider" id="swe-hero-slider">
 		<?php foreach ( $slides as $index => $slide ) : ?>
 			<div class="swe-hero__slide<?php echo 0 === $index ? ' is-active' : ''; ?>">
-				<a href="<?php echo esc_url( $slide['url'] ); ?>">
+				<a href="<?php echo esc_url( $slide['url'] ); ?>" class="swe-hero__link">
 					<picture>
 						<source media="(max-width: 767px)" srcset="<?php echo esc_url( $slide['image_mobile'] ); ?>">
 						<img src="<?php echo esc_url( $slide['image'] ); ?>" alt="" loading="<?php echo 0 === $index ? 'eager' : 'lazy'; ?>">
@@ -25,7 +26,9 @@ $services   = swe_clone_services();
 				</a>
 			</div>
 		<?php endforeach; ?>
-		<div class="swe-hero__dots" id="swe-hero-dots"></div>
+		<?php if ( count( $slides ) > 1 ) : ?>
+			<div class="swe-hero__dots" id="swe-hero-dots"></div>
+		<?php endif; ?>
 	</div>
 </section>
 
@@ -42,14 +45,18 @@ $services   = swe_clone_services();
 <section class="swe-products-section">
 	<div class="swe-container">
 		<h2 class="swe-section-title">
-			<a href="<?php echo esc_url( home_url( '/collections/tops/' ) ); ?>">TẤT CẢ SẢN PHẨM</a>
+			<a href="<?php echo esc_url( swe_clone_shop_url() ); ?>">TẤT CẢ SẢN PHẨM</a>
 		</h2>
 	</div>
 	<div class="swe-container">
 		<div class="swe-products-grid">
 			<?php
 			foreach ( $products as $product ) {
-				get_template_part( 'template-parts/product', 'card', array( 'product' => $product ) );
+				if ( is_object( $product ) && method_exists( $product, 'get_id' ) ) {
+					get_template_part( 'template-parts/product', 'card', array( 'wc_product' => $product ) );
+				} else {
+					get_template_part( 'template-parts/product', 'card', array( 'product' => $product ) );
+				}
 			}
 			?>
 		</div>
@@ -74,16 +81,9 @@ $services   = swe_clone_services();
 	<div class="swe-container">
 		<h2 class="swe-section-title">SWE® FEEDBACK</h2>
 		<div class="swe-feedback__grid">
-			<?php
-			$feedback_imgs = array(
-				'https://cdn.hstatic.net/themes/200001108416/1001438792/14/imgaView1.jpg?v=56',
-				'https://cdn.hstatic.net/themes/200001108416/1001438792/14/imgaView2.jpg?v=56',
-				'https://cdn.hstatic.net/themes/200001108416/1001438792/14/imgaView3.jpg?v=56',
-			);
-			foreach ( $feedback_imgs as $img ) :
-				?>
-				<a href="#" class="swe-feedback__item">
-					<img src="<?php echo esc_url( $img ); ?>" alt="Feedback" loading="lazy">
+			<?php foreach ( $feedback as $item ) : ?>
+				<a href="<?php echo esc_url( $item['url'] ); ?>" class="swe-feedback__item">
+					<img src="<?php echo esc_url( $item['image'] ); ?>" alt="Feedback" loading="lazy">
 				</a>
 			<?php endforeach; ?>
 		</div>

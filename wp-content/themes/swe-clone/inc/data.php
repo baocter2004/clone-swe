@@ -13,15 +13,38 @@ defined( 'ABSPATH' ) || exit;
  * @return array<int, array{label: string, url: string}>
  */
 function swe_clone_nav_items() {
+	if ( function_exists( 'swe_clone_is_woo' ) && swe_clone_is_woo() ) {
+		$terms = get_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => false,
+				'number'     => 8,
+				'orderby'    => 'menu_order',
+				'order'      => 'ASC',
+			)
+		);
+
+		if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+			$items = array();
+			foreach ( $terms as $term ) {
+				$items[] = array(
+					'label' => $term->name,
+					'url'   => get_term_link( $term ),
+				);
+			}
+			return $items;
+		}
+	}
+
 	return array(
-		array( 'label' => 'new arrivals', 'url' => home_url( '/collections/new-arrivals/' ) ),
-		array( 'label' => 'best-selling items', 'url' => home_url( '/collections/best-selling-items/' ) ),
-		array( 'label' => 'tops', 'url' => home_url( '/collections/tops/' ) ),
-		array( 'label' => 'bottoms', 'url' => home_url( '/collections/bottoms/' ) ),
-		array( 'label' => 'outerwear', 'url' => home_url( '/collections/outerwear/' ) ),
-		array( 'label' => 'accessories', 'url' => home_url( '/collections/accessories/' ) ),
-		array( 'label' => 'womens', 'url' => home_url( '/collections/womens/' ) ),
-		array( 'label' => 'sale', 'url' => home_url( '/collections/clearance-sale/' ) ),
+		array( 'label' => 'new arrivals', 'url' => home_url( '/shop/' ) ),
+		array( 'label' => 'best-selling items', 'url' => home_url( '/shop/' ) ),
+		array( 'label' => 'tops', 'url' => home_url( '/product-category/tops/' ) ),
+		array( 'label' => 'bottoms', 'url' => home_url( '/product-category/bottoms/' ) ),
+		array( 'label' => 'outerwear', 'url' => home_url( '/product-category/outerwear/' ) ),
+		array( 'label' => 'accessories', 'url' => home_url( '/product-category/accessories/' ) ),
+		array( 'label' => 'womens', 'url' => home_url( '/product-category/womens/' ) ),
+		array( 'label' => 'sale', 'url' => home_url( '/shop/?on_sale=1' ) ),
 	);
 }
 

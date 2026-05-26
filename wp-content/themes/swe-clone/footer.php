@@ -54,14 +54,24 @@ defined( 'ABSPATH' ) || exit;
 				<h3>Giỏ hàng</h3>
 				<button type="button" id="swe-cart-close" aria-label="<? esc_attr_e( 'Đóng', 'swe-clone' ); ?>">&times;</button>
 			</div>
-			<p class="swe-cart-drawer__empty">Hiện chưa có sản phẩm</p>
+			<div class="swe-mini-cart">
+				<?php
+				if ( swe_clone_is_woo() ) {
+					woocommerce_mini_cart();
+				} else {
+					echo '<p class="swe-cart-drawer__empty">' . esc_html__( 'Cài WooCommerce để dùng giỏ hàng.', 'swe-clone' ) . '</p>';
+				}
+				?>
+			</div>
+			<?php if ( swe_clone_is_woo() ) : ?>
 			<div class="swe-cart-drawer__footer">
-				<p><strong>TỔNG TIỀN:</strong> <span>0₫</span></p>
+				<p><strong><?php esc_html_e( 'TỔNG TIỀN:', 'swe-clone' ); ?></strong> <?php wc_cart_totals_subtotal_html(); ?></p>
 				<div class="swe-cart-drawer__actions">
-					<a href="#" class="swe-btn swe-btn--outline">Xem giỏ hàng</a>
-					<a href="#" class="swe-btn">Thanh toán</a>
+					<a href="<?php echo esc_url( swe_clone_cart_url() ); ?>" class="swe-btn swe-btn--outline"><?php esc_html_e( 'Xem giỏ hàng', 'swe-clone' ); ?></a>
+					<a href="<?php echo esc_url( swe_clone_checkout_url() ); ?>" class="swe-btn"><?php esc_html_e( 'Thanh toán', 'swe-clone' ); ?></a>
 				</div>
 			</div>
+			<?php endif; ?>
 		</div>
 	</aside>
 </div>

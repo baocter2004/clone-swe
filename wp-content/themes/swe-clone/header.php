@@ -39,21 +39,24 @@ $nav_items = swe_clone_nav_items();
 					</a>
 				</div>
 
-				<form class="swe-header__search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+				<form class="swe-header__search" role="search" method="get" action="<?php echo esc_url( swe_clone_shop_url() ); ?>">
 					<label class="screen-reader-text" for="swe-search"><? esc_html_e( 'Tìm kiếm', 'swe-clone' ); ?></label>
-					<input type="search" id="swe-search" name="s" placeholder="Tìm kiếm sản phẩm..." value="<?php echo get_search_query(); ?>">
+					<?php if ( swe_clone_is_woo() ) : ?>
+						<input type="hidden" name="post_type" value="product">
+					<?php endif; ?>
+					<input type="search" id="swe-search" name="s" placeholder="Tìm kiếm sản phẩm..." value="<?php echo esc_attr( get_search_query() ); ?>">
 					<button type="submit" aria-label="<? esc_attr_e( 'Tìm kiếm', 'swe-clone' ); ?>">
 						<svg width="20" height="20" viewBox="0 0 24 27" aria-hidden="true"><path d="M10,2C4.5,2,0,6.5,0,12s4.5,10,10,10s10-4.5,10-10S15.5,2,10,2z M10,19c-3.9,0-7-3.1-7-7s3.1-7,7-7s7,3.1,7,7S13.9,19,10,19z"/><rect x="17" y="17" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -9.2844 19.5856)" width="4" height="8"/></svg>
 					</button>
 				</form>
 
 				<div class="swe-header__actions">
-					<button type="button" class="swe-header__icon" id="swe-account-toggle" aria-label="<? esc_attr_e( 'Tài khoản', 'swe-clone' ); ?>">
+					<a href="<?php echo esc_url( swe_clone_is_woo() ? wc_get_page_permalink( 'myaccount' ) : '#' ); ?>" class="swe-header__icon" aria-label="<? esc_attr_e( 'Tài khoản', 'swe-clone' ); ?>">
 						<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
-					</button>
+					</a>
 					<button type="button" class="swe-header__icon swe-header__cart" id="swe-cart-toggle" aria-label="<? esc_attr_e( 'Giỏ hàng', 'swe-clone' ); ?>">
 						<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg>
-						<span class="swe-header__cart-count">0</span>
+						<span class="swe-header__cart-count"><?php echo esc_html( (string) swe_clone_cart_count() ); ?></span>
 					</button>
 				</div>
 			</div>

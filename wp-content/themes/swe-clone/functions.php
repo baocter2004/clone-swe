@@ -7,11 +7,19 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SWE_CLONE_VERSION', '1.0.0' );
+define( 'SWE_CLONE_VERSION', '1.1.1' );
 define( 'SWE_CLONE_DIR', get_template_directory() );
 define( 'SWE_CLONE_URI', get_template_directory_uri() );
 
 require_once SWE_CLONE_DIR . '/inc/data.php';
+require_once SWE_CLONE_DIR . '/inc/cpt.php';
+require_once SWE_CLONE_DIR . '/inc/meta-boxes.php';
+require_once SWE_CLONE_DIR . '/inc/queries.php';
+
+require_once SWE_CLONE_DIR . '/inc/seeder.php';
+require_once SWE_CLONE_DIR . '/inc/woocommerce.php';
+require_once SWE_CLONE_DIR . '/inc/woocommerce-seed.php';
+require_once SWE_CLONE_DIR . '/inc/woocommerce-setup.php';
 
 /**
  * Theme setup.
@@ -33,6 +41,15 @@ function swe_clone_setup() {
 add_action( 'after_setup_theme', 'swe_clone_setup' );
 
 /**
+ * Flush rewrite rules khi kích hoạt theme (CPT hiện trong Admin).
+ */
+function swe_clone_theme_activation() {
+	swe_clone_register_cpts();
+	flush_rewrite_rules();
+}
+add_action( 'after_switch_theme', 'swe_clone_theme_activation' );
+
+/**
  * Enqueue styles & scripts.
  */
 function swe_clone_assets() {
@@ -50,10 +67,21 @@ function swe_clone_assets() {
 		SWE_CLONE_VERSION
 	);
 
+	if ( swe_clone_is_woo() ) {
+		wp_enqueue_style(
+			'swe-clone-woo',
+			SWE_CLONE_URI . '/assets/css/woocommerce.css',
+			array( 'swe-clone-main' ),
+			SWE_CLONE_VERSION
+		);
+	}
+
+	$script_deps = swe_clone_is_woo() ? array( 'jquery' ) : array();
+
 	wp_enqueue_script(
 		'swe-clone-main',
 		SWE_CLONE_URI . '/assets/js/main.js',
-		array(),
+		$script_deps,
 		SWE_CLONE_VERSION,
 		true
 	);

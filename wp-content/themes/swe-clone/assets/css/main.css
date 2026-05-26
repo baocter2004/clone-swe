@@ -13,6 +13,7 @@
 	--swe-container: 1200px;
 	--swe-gap: 20px;
 	--swe-header-h: 72px;
+	--swe-header-total: 132px;
 	--swe-transition: 0.3s ease;
 }
 
@@ -24,6 +25,7 @@
 
 html {
 	scroll-behavior: smooth;
+	overflow-x: clip;
 }
 
 body.swe-body {
@@ -34,6 +36,12 @@ body.swe-body {
 	color: var(--swe-black);
 	background: var(--swe-bg);
 	-webkit-font-smoothing: antialiased;
+	overflow-x: clip;
+}
+
+.swe-layout {
+	overflow-x: clip;
+	max-width: 100%;
 }
 
 img {
@@ -267,41 +275,65 @@ ul {
 	padding: 4px 0;
 }
 
-/* ----- Hero ----- */
+/* ----- Hero (full màn hình như swe.vn) ----- */
 .swe-hero {
 	position: relative;
 	overflow: hidden;
+	width: 100%;
+}
+
+/* Hero đã nằm ngoài .swe-container → width 100% là đủ, không dùng 100vw (gây scroll ngang) */
+.swe-hero--fullscreen {
+	width: 100%;
+	max-width: 100%;
 }
 
 .swe-hero__slider {
 	position: relative;
-	aspect-ratio: 16 / 7;
-	max-height: 520px;
-}
-
-@media (max-width: 767px) {
-	.swe-hero__slider {
-		aspect-ratio: 4 / 5;
-		max-height: none;
-	}
+	width: 100%;
+	/* Chiều cao = màn hình trừ header (topbar + logo + menu) */
+	height: calc(100vh - var(--swe-header-total, 132px));
+	height: calc(100svh - var(--swe-header-total, 132px));
+	min-height: 420px;
+	overflow: hidden;
 }
 
 .swe-hero__slide {
 	position: absolute;
-	inset: 0;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 	opacity: 0;
-	transition: opacity var(--swe-transition);
+	visibility: hidden;
+	transition: opacity 0.6s ease, visibility 0.6s ease;
+	pointer-events: none;
 }
 
 .swe-hero__slide.is-active {
 	opacity: 1;
+	visibility: visible;
 	z-index: 1;
+	pointer-events: auto;
+}
+
+.swe-hero__link {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.swe-hero__slide picture {
+	display: block;
+	width: 100%;
+	height: 100%;
 }
 
 .swe-hero__slide img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+	object-position: center;
 }
 
 .swe-hero__dots {
@@ -367,6 +399,15 @@ ul {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	gap: var(--swe-gap);
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.swe-products-grid > li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }
 
 .swe-product-card {
@@ -654,7 +695,17 @@ ul {
 }
 
 /* ----- Responsive breakpoints ----- */
+@media (max-width: 767px) {
+	:root {
+		--swe-header-total: 96px;
+	}
+}
+
 @media (min-width: 768px) {
+	:root {
+		--swe-header-total: 148px;
+	}
+
 	.swe-header__row {
 		grid-template-columns: 1fr auto 1fr;
 	}
